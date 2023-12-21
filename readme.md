@@ -106,5 +106,12 @@ paste the public-ip:5000 onto the brower. We should get the message `welcome to 
 
 ## Defining Routes For Our Application
 
-We will create a route 
+We will create a `routes` folder which will contain code pointing to three main endspoints used in a todo application. This will contain the post,get,delete requests which will be helpful in interacting with our client_side and the database side via restful apis.
 
+```
+mkdir routes
+cd routes
+touch api.js
+```
+
+write 
