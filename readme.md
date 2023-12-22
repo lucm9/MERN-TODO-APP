@@ -162,7 +162,7 @@ const Todo = mongoose.model('todo', TodoSchema);
 module.exports = Todo;
 ```
 
-Since we have defined our database schema of how our database should be structured we need to then update the `api.js` code in our route directory.
+Since we have defined our database schema of how our database should be structured we need to then update the `api.js` code in our `route` directory.
 
 ```
 const express = require ('express');
@@ -202,4 +202,69 @@ module.exports = router;
 We will need to create a database to store all the information when we make post request to an endpoint. We will be using MLab which provides DBaas (Database as a service) solution
 
 Login into MLab and create a cluster. 
+
+To connect to the mongoose application database to our database service we connect to it by using the connection credentials provided by mLab.
+
+Copy the following code and save it insive `.env` file which should be created in the parent `todo` directory.
+
+`DB = 'mongodb+srv://<username>:<password>@<network-address>/<dbname>?retryWrites=true&w=majority'`
+
+Change the username,password,database name and network address to the one specified by the mongoose credentials and when creating the database and collection
+
+Update the code in our `index.js` file under the `ToDo` directory as we need to point mongoose to the database service we created using mLab.
+
+```
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const routes = require('./routes/api');
+const path = require('path');
+require('dotenv').config();
+
+const app = express();
+
+const port = process.env.PORT || 5000;
+
+//connect to the database
+mongoose.connect(process.env.DB, { useNewUrlParser: true, useUnifiedTopology: true })
+.then(() => console.log(`Database connected successfully`))
+.catch(err => console.log(err));
+
+//since mongoose promise is depreciated, we overide it with node's promise
+mongoose.Promise = global.Promise;
+
+app.use((req, res, next) => {
+res.header("Access-Control-Allow-Origin", "\*");
+res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+next();
+});
+
+app.use(bodyParser.json());
+
+app.use('/api', routes);
+
+app.use((err, req, res, next) => {
+console.log(err);
+next();
+});
+
+app.listen(port, () => {
+console.log(`Server running on port ${port}`)
+});
+```
+
+We run `node index.js` to test our connection and our latest changes to the code.
+
+
+
+## Testing Backend Code Using Postman
+
+We have built the backend of our application and in order to test to see if it works without a frontend, we use `Postman` to test the endpoints. 
+
+On Postman, we make a `POST` request to our database specifying an action in the body of request.
+
+## Creating Frontend
+
+In the todo directory which is same directory containing the backend code.
+Run `npx create-react-app client`- This creates a client directory containing all the necessary packages required for `REACT` to work.
 
