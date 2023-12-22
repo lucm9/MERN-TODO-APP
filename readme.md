@@ -28,24 +28,33 @@ We will build a simple todo list application and deploy it onto AWS cloud EC2 ma
 
 We log on to AWS cloud Services and create an EC2 Ubuntu VM instance. When creating an instance, choose keypair authentication and download private key(.*pem) on your local computer.
 
-![Alt text](<Screenshot 2023-12-20 235734.png>)
+![1 EC2_creation](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/07e4fd65-391c-443e-afbd-26ddd96b6d1c)
 
 on windows terminal, cd into the directory containing the downloaded keypair file. Run the below commond to log into the instance via ssh:
 `ssh -i <private_keyfile.pem>username@ip-address`
 
-![Alt text](<Screenshot 2023-12-21 003537.png>)
+![2 Logon_Instance](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/a8c7db12-5dfc-4768-aa9a-be8a2263d2b6)
 
 ## Configuring Backend 
 
 Run `sudo apt update -y` and `sudo apt upgrade` to update all default ubuntu dependencies to ensure compatibility during package installation.
 
+![3 Sudo_Update](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/d407b716-1660-4dca-a76b-302be2a9cd52)
+
+![4 Sudo_Upgrade](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/badb8867-7722-43de-80b6-eabd7ec2774c)
+
 Next is `nodejs` installation we need to fetch the location from the ubuntu reposotiry using the following command. `curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -`
 
+![5 Fetch_nodejs_location](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/2ee9b7c4-8ae4-4947-bf4e-4d7c21684cd9)
 
 Run the following command to install nodejs.
 `sudo apt-get install -y nodejs`
 
+![6 Nodejs_Installation](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/a83e73d9-b26f-47e8-a05e-0e5043e2c88a)
+
 Verify nodejs has been installed by running `node -v`
+
+![7 Nodejs and Npm_verify](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/923c73ec-562a-4d93-9572-c8ea3f752afe)
 
 Installing nodejs will install the package manager as well which is `npm` package manager.
 
@@ -56,15 +65,21 @@ We need to create a directory that will house our codes and packages and all the
 
 inside that directory we will initialize our project using `npm init`. This enables javascript to install packages usefull for running our application.
 
+![8 npm_init](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/449534fc-a7de-4fbc-8d0a-6a99d0255979)
+
 ## Express Installation
 
 We will be installation express which is the backend framework for nodejs. Which will be helping when creating routes for application and http requests. 
+
+![9 Express_Installation](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/f6221ceb-44a3-4702-8e76-9104bb0c7638)
 
 ###  "routes" refer to the definition of how an application responds to client requests at specific endpoints (URLs).
 
 Now we create `index.js` file which will contain code useful to run our express server. 
 
 run `touch index.js`
+
+![10 Index_js](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/893f61a1-5e30-4239-9909-0a64468b8002)
 
 Next we install `dotenv` This command installs the dotenv package and adds it to your project's dependencies in the `package.json` file. 
 
@@ -103,6 +118,8 @@ run `node index.js` to get the server up and running. Running `node index.js` is
 Notice in the index.js file we are exposing port number `5000`. There for we need to create an inbound rule allowing requests to that port. 
 
 paste the public-ip:5000 onto the brower. We should get the message `welcome to express`
+
+![11 Opening_port_5000](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/fa24c989-30a8-4cb2-841b-c0ffdc3e7ec5)
 
 ## Defining Routes For Our Application
 
@@ -205,7 +222,15 @@ Login into MLab and create a cluster.
 
 To connect to the mongoose application database to our database service we connect to it by using the connection credentials provided by mLab.
 
-Copy the following code and save it insive `.env` file which should be created in the parent `todo` directory.
+![12 Creating_Cluster](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/0ab18fb3-7fb1-4321-be6a-03447e8f23f6)
+
+![13 DB_Creation](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/b766e000-8fc9-4ba4-aec7-f364c0abaf66)
+
+
+Copy the following code and save it insive `.env` file which ![Uploading 12.Creating_Cluster.png…]()
+should be created in the parent `todo` directory.
+
+![14 Database_connection](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/79abc2a8-5915-455b-93be-1ef0792b87b8)
 
 `DB = 'mongodb+srv://<username>:<password>@<network-address>/<dbname>?retryWrites=true&w=majority'`
 
@@ -255,7 +280,7 @@ console.log(`Server running on port ${port}`)
 
 We run `node index.js` to test our connection and our latest changes to the code.
 
-
+![15 Testing_Index_js](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/e2028255-5616-4ba9-8e6c-6e3dec4ffbb8)
 
 ## Testing Backend Code Using Postman
 
@@ -263,10 +288,20 @@ We have built the backend of our application and in order to test to see if it w
 
 On Postman, we make a `POST` request to our database specifying an action in the body of request.
 
+![16 Postman_Post_Request](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/1d0fdc4a-2e5b-4769-bbe5-ceef96a5f585)
+
+![17 Get_Request](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/a460ff25-bd07-4084-be4b-17a0ee2e3816)
+
+![18 Validate_In_DB](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/afc5d807-d3fd-450f-83b2-b9fa14af3b8d)
+
+![19 Delete_Request](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/952c356e-6b63-47ed-8f1d-651076e9446a)
+
 ## Creating Frontend
 
 In the todo directory which is same directory containing the backend code.
 Run `npx create-react-app client`- This creates a client directory containing all the necessary packages required for `REACT` to work.
+
+![20 React_Client](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/d45e9494-e2a7-477d-8b79-1363b4cc4f13)
 
 We install `concurrently` and `nodemon` which are important packages used for the build up process. `Concurrently` ensures multiple command can run at the same time on the same terminal.
 
@@ -276,12 +311,15 @@ npm install concurrently --save-dev
 npm install nodemon --save-dev
 ```
 
+![21 Concurrently_nodemon_Install](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/240f4088-d7a6-4c54-afe5-bbf74720b8dc)
+
 Configure the package.json file to run the new installation.
 
+![22 Package_json](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/3306df9c-81ce-4672-9b2e-cf6d359408fc)
 
 Configure the proxy in package.json under the `client` directory to ensure our site is using `http://localhost:5000` rather than always including the entire path like `http://localhost:5000/api/todos`
 
-
+![23 Package_json_client](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/e67f5901-a77a-4caa-ad4e-31426fe107c3)
 
 We move into the `Client` directory then cd into `src` directory amd them create a `components` directory which will contain files that contains our frontend code. 
 
@@ -559,4 +597,8 @@ body {
 ```
 
 Lastly go into the root directory `Todo` and run `npm run dev`. This builds the application and spins it up
+![24 npm_dev](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/7d841620-ac2c-486f-8c32-57331bf6eab9)
+
+![25 Todo_Application](https://github.com/lucm9/MERN-TODO-APP/assets/96879757/cfdf7e4e-9219-4ca0-b8da-24afe737b9cf)
+
 
