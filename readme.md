@@ -268,3 +268,163 @@ On Postman, we make a `POST` request to our database specifying an action in the
 In the todo directory which is same directory containing the backend code.
 Run `npx create-react-app client`- This creates a client directory containing all the necessary packages required for `REACT` to work.
 
+We install `concurrently` and `nodemon` which are important packages used for the build up process. `Concurrently` ensures multiple command can run at the same time on the same terminal.
+
+```
+npm install concurrently --save-dev
+
+npm install nodemon --save-dev
+```
+
+Configure the package.json file to run the new installation.
+
+
+Configure the proxy in package.json under the `client` directory to ensure our site is using `http://localhost:5000` rather than always including the entire path like `http://localhost:5000/api/todos`
+
+
+
+We move into the `Client` directory then cd into `src` directory amd them create a `components` directory which will contain files that contains our frontend code. 
+
+Inside the `component` directory we create files such as `input.js`, `ListTodo.js`, `Todo.js`
+
+```
+import React, { Component } from 'react';
+import axios from 'axios';
+
+class Input extends Component {
+
+state = {
+action: ""
+}
+
+addTodo = () => {
+const task = {action: this.state.action}
+
+    if(task.action && task.action.length > 0){
+      axios.post('/api/todos', task)
+        .then(res => {
+          if(res.data){
+            this.props.getTodos();
+            this.setState({action: ""})
+          }
+        })
+        .catch(err => console.log(err))
+    }else {
+      console.log('input field required')
+    }
+
+}
+
+handleChange = (e) => {
+this.setState({
+action: e.target.value
+})
+}
+
+render() {
+let { action } = this.state;
+return (
+<div>
+<input type="text" onChange={this.handleChange} value={action} />
+<button onClick={this.addTodo}>add todo</button>
+</div>
+)
+}
+}
+
+export default Input
+```
+
+To make use of Axios, which is a Promise based HTTP client for the browser and node.js, you need to cd into your `client`directory from your terminal and run `npm install axios`.
+
+In the `ListTodo.js`
+
+```
+import React from 'react';
+
+const ListTodo = ({ todos, deleteTodo }) => {
+
+return (
+<ul>
+{
+todos &&
+todos.length > 0 ?
+(
+todos.map(todo => {
+return (
+<li key={todo._id} onClick={() => deleteTodo(todo._id)}>{todo.action}</li>
+)
+})
+)
+:
+(
+<li>No todo(s) left</li>
+)
+}
+</ul>
+)
+}
+
+export default ListTodo
+```
+
+in the Todo.js 
+
+```
+import React, {Component} from 'react';
+import axios from 'axios';
+
+import Input from './Input';
+import ListTodo from './ListTodo';
+
+class Todo extends Component {
+
+state = {
+todos: []
+}
+
+componentDidMount(){
+this.getTodos();
+}
+
+getTodos = () => {
+axios.get('/api/todos')
+.then(res => {
+if(res.data){
+this.setState({
+todos: res.data
+})
+}
+})
+.catch(err => console.log(err))
+}
+
+deleteTodo = (id) => {
+
+    axios.delete(`/api/todos/${id}`)
+      .then(res => {
+        if(res.data){
+          this.getTodos()
+        }
+      })
+      .catch(err => console.log(err))
+
+}
+
+render() {
+let { todos } = this.state;
+
+    return(
+      <div>
+        <h1>My Todo(s)</h1>
+        <Input getTodos={this.getTodos}/>
+        <ListTodo todos={todos} deleteTodo={this.deleteTodo}/>
+      </div>
+    )
+
+}
+}
+
+export default Todo;
+```
+
